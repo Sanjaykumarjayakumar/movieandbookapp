@@ -1,0 +1,113 @@
+/* src/pages/Movies.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+.movies-container {
+  background-color: #121212;
+  color: #fff;
+  padding: 25px;
+  font-family: 'Lato', sans-serif;
+}
+
+.movies-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 40px;
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 50px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+}
+
+.movies-nav span {
+  font-size: 1.3em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 30px;
+}
+
+.movies-nav span:hover, .movies-nav span.active {
+  background: linear-gradient(to right, #f857a6, #ff5858);
+  color: #fff;
+}
+
+.profile-icon {
+  font-size: 2.2em;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.profile-icon:hover {
+    transform: scale(1.1);
+}
+
+section {
+  margin-bottom: 50px;
+}
+
+h2 {
+  font-size: 2.8em;
+  font-weight: 900;
+  margin-bottom: 25px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+}
+
+.movie-card {
+  background: #1f1f1f;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+
+.movie-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: filter 0.4s ease;
+}
+
+.movie-card:hover img {
+    filter: brightness(0.7);
+}
+
+.movie-card p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.movie-card:hover p {
+    opacity: 1;
+    transform: translateY(0);
+}

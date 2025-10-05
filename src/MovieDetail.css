@@ -1,0 +1,75 @@
+/* src/MovieDetail.css */
+
+.movie-detail-container {
+  padding: 20px;
+  background: #1a1a1a;
+  color: white;
+}
+
+.movie-detail-card {
+  display: flex;
+  gap: 20px;
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.movie-detail-img {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.movie-detail-info {
+  flex: 1;
+}
+
+.movie-detail-title {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.movie-detail-meta {
+  font-size: 1.1em;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.movie-detail-overview {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.cast-section, .ott-section {
+  margin-top: 30px;
+}
+
+.section-title {
+  font-size: 1.8em;
+  margin-bottom: 15px;
+  color: #ff4c29;
+}
+
+.cast-grid, .ott-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.actor-card {
+  text-align: center;
+}
+
+.actor-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 10px;
+}
+
+.ott-card {
+  background: #333;
+  padding: 10px 15px;
+  border-radius: 8px;
+}

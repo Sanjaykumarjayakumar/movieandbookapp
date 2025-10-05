@@ -1,0 +1,88 @@
+/* Preferences.css */
+
+.preferences-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.preferences-container h1 {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+}
+
+.preference-section {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.preference-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #e50914;
+  padding-bottom: 5px;
+}
+
+.preference-section p {
+  font-size: 1rem;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.language-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #222;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.genre-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.genre-preference-card {
+  padding: 15px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.genre-preference-card:hover {
+  background-color: #444;
+}
+
+.genre-preference-card.selected {
+  background-color: #e50914;
+  border-color: #fff;
+  transform: scale(1.05);
+}
+
+.save-btn {
+  padding: 15px 30px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.save-btn:hover {
+  background-color: #f6121d;
+}

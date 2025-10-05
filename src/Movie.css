@@ -1,0 +1,52 @@
+.movies-container {
+  background: #111;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.movies-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e1e1e;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.movies-nav span {
+  margin: 0 15px;
+  cursor: pointer;
+}
+.profile-icon {
+  font-size: 24px;
+}
+
+section {
+  margin-bottom: 30px;
+}
+section h2 {
+  margin-bottom: 10px;
+}
+
+.movie-grid {
+  display: flex;
+  gap: 15px;
+}
+.movie-card {
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  width: 140px;
+}
+.movie-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+.movie-card p {
+  margin-top: 8px;
+  font-size: 14px;
+}
