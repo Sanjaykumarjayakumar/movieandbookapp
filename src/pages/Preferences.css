@@ -1,90 +1,106 @@
 /* src/pages/Preferences.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .preferences-container {
+  min-height: calc(100vh - 80px);
+  background: #111;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #1e3c72;
-  background: -webkit-linear-gradient(to right, #2a5298, #1e3c72);
-  background: linear-gradient(to right, #2a5298, #1e3c72);
-  color: white;
-  font-family: 'Montserrat', sans-serif;
+  padding: 40px;
 }
 
-.preferences-box {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 40px 60px;
-  border-radius: 30px;
-  width: 480px;
+.preferences-content {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 50px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.avatar-placeholder {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 30px;
-  background: linear-gradient(to right, #ff416c, #ff4b2b);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 60px;
-  color: white;
-  box-shadow: 0 0 25px rgba(255, 65, 108, 0.8);
+.glow-text {
+  font-size: 3em;
+  font-weight: 700;
+  color: #00aaff;
+  text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff;
+  margin-bottom: 15px;
 }
 
-label {
-  display: block;
-  text-align: left;
-  margin-top: 25px;
+.subtitle {
   font-size: 1.2em;
-  font-weight: 600;
-  color: #eee;
+  color: #ccc;
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-select {
-  width: 100%;
-  padding: 18px;
-  margin-top: 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+.selection-group {
+  margin-bottom: 40px;
+}
+
+.group-title {
+  font-size: 1.8em;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.genre-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.option-btn {
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #fff;
   font-size: 1.1em;
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: right 20px top 50%;
-  background-size: .75em auto;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-select:focus {
-  outline: none;
-  border-color: #ff4b2b;
-  box-shadow: 0 0 20px rgba(255, 75, 43, 0.6);
+.option-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00aaff;
+}
+
+.option-btn.selected {
+  background: #00aaff;
+  border-color: #00aaff;
+  color: #111;
+  font-weight: 700;
+  box-shadow: 0 0 15px #00aaff;
 }
 
 .save-btn {
-  margin-top: 40px;
-  width: 100%;
-  padding: 18px;
-  background: linear-gradient(to right, #ff416c, #ff4b2b);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
+  padding: 18px 40px;
   font-size: 1.3em;
-  font-weight: 700;
-  transition: all 0.4s ease;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #00aaff, #00ffaa);
+  color: #fff;
+  transition: all 0.3s ease;
 }
 
-.save-btn:hover {
-  box-shadow: 0 0 25px rgba(255, 65, 108, 0.8);
-  transform: translateY(-3px);
+.save-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00aaff;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -1,0 +1,59 @@
+/* src/components/BookRow.css */
+.book-row-container {
+  margin-bottom: 30px;
+}
+
+.book-row-container h2 {
+  color: #fff;
+  font-size: 1.6em;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-left: 40px;
+}
+
+.book-row-scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 40px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.book-row-scroll::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.book-row-card {
+  flex: 0 0 160px;
+  margin-right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.book-row-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 170, 255, 0.2);
+}
+
+.book-row-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.book-row-card-info {
+  padding: 15px 10px;
+}
+
+.book-row-card-info h3 {
+  color: #fff;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,130 +1,174 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import MovieRow from "../components/MovieRow";
+import { useLanguage } from "../hooks/useLanguage";
 import "./Movies.css";
 
 const MoviesPage = () => {
   const navigate = useNavigate();
-  const [latestMovies, setLatestMovies] = useState([]);
-  const [genreMovies, setGenreMovies] = useState([]);
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
+  const [genre, setGenre] = useState("");
+  const [heroMovie, setHeroMovie] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState(null);
 
-  const preferredLanguage = localStorage.getItem("preferredLanguage") || "en";
-  const preferredGenre = localStorage.getItem("preferredGenre") || "";
+  const [topPicks, setTopPicks] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [latest, setLatest] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+
+  const user = auth.currentUser;
+  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+  const genreName = localStorage.getItem("genreName") || "";
+  const region = "IN"; // Moved to component scope
+
+  const fetchMovies = useCallback(async (url) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`API call failed with status: ${res.status}`);
+      }
+      const data = await res.json();
+      return data.results;
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch movies. Please try again later.");
+      return [];
+    }
+  }, []);
 
   useEffect(() => {
-    const apiKey = "fcd51437a7ba421ef6d37e8a2a25c893";
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-
-    // Latest releases (already released movies)
-    const fetchLatestMovies = async () => {
-      try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_original_language=${preferredLanguage}&release_date.lte=${today}&sort_by=release_date.desc&region=IN`
-        );
-        const data = await res.json();
-        setLatestMovies(data.results.slice(0, 10));
-      } catch (err) {
-        console.error(err);
+    const fetchGenrePreference = async () => {
+      let userGenre = "";
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists() && userDoc.data().preferences) {
+            userGenre = userDoc.data().preferences.genre || "";
+          }
+        } catch (err) {
+          console.error("Error fetching user preferences:", err);
+          setError("Could not load your genre preference.");
+        }
+      } else {
+        userGenre = localStorage.getItem("preferredGenre") || "";
       }
+      setGenre(userGenre);
     };
+    fetchGenrePreference();
+  }, [user]);
 
-    // Movies of selected genre & language (already released)
-    const fetchGenreMovies = async () => {
-      if (!preferredGenre) return setGenreMovies([]);
-      try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_original_language=${preferredLanguage}&with_genres=${preferredGenre}&release_date.lte=${today}&sort_by=popularity.desc&region=IN`
-        );
-        const data = await res.json();
-        setGenreMovies(data.results.slice(0, 10));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    // Upcoming movies (not yet released)
-    const fetchUpcomingMovies = async () => {
-      try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_original_language=${preferredLanguage}&release_date.gte=${today}&sort_by=release_date.asc&region=IN`
-        );
-        const data = await res.json();
-        setUpcomingMovies(data.results.slice(0, 10));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    // Trending movies (already released)
-    const fetchTrendingMovies = async () => {
-      try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}&region=IN`
-        );
-        const data = await res.json();
-        setTrendingMovies(data.results.slice(0, 10));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchAll = async () => {
+  useEffect(() => {
+    const fetchAllCategories = async () => {
+      if (!language) return;
       setLoading(true);
-      await Promise.all([
-        fetchLatestMovies(),
-        fetchGenreMovies(),
-        fetchUpcomingMovies(),
-        fetchTrendingMovies(),
-      ]);
-      setLoading(false);
+      setError(null);
+
+      const urls = {
+        topPicks: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&with_original_language=${language}&with_genres=${genre}`,
+        trending: `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}&language=${language}`,
+        latest: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=${language}&region=${region}`,
+        upcoming: `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=${language}&region=${region}`,
+      };
+
+      try {
+        const [topPicksResults, trendingResults, latestResults, upcomingResults] = await Promise.all([
+          fetchMovies(urls.topPicks),
+          fetchMovies(urls.trending),
+          fetchMovies(urls.latest),
+          fetchMovies(urls.upcoming),
+        ]);
+
+        setHeroMovie(topPicksResults[0] || trendingResults[0]);
+        setTopPicks(topPicksResults);
+        setTrending(trendingResults);
+        setLatest(latestResults);
+        setUpcoming(upcomingResults);
+
+      } catch (err) {
+        console.error("Failed to fetch movie categories:", err);
+        setError("There was a problem loading movie categories. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchAll();
-  }, [preferredLanguage, preferredGenre]);
+    fetchAllCategories();
+  }, [language, genre, fetchMovies, apiKey, region]);
 
-  if (loading) return <div className="movies-container">Loading movies...</div>;
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (searchQuery.length > 2) {
+        setLoading(true);
+        const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&language=${language}&page=1&include_adult=false`;
+        const results = await fetchMovies(url);
+        setSearchResults(results);
+        setLoading(false);
+      }
+    };
 
-  const renderMovieRow = (title, movies) => (
-    <section>
-      <h2>{title}</h2>
-      <div className="movie-grid">
-        {movies.length ? (
-          movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="movie-card"
-              onClick={() => navigate(`/movies/${movie.id}`)}
-            >
-              <img
-                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                alt={movie.title}
-              />
-              <p>{movie.title}</p>
+    const debounceFetch = setTimeout(fetchSearchResults, 500);
+    return () => clearTimeout(debounceFetch);
+
+  }, [searchQuery, fetchMovies, apiKey, language]);
+
+
+  const HeroCard = ({ movie }) => {
+    if (!movie) return null;
+    const { title, overview, backdrop_path } = movie;
+    const imageUrl = `https://image.tmdb.org/t/p/original${backdrop_path}`;
+
+    return (
+        <div className="hero-card" style={{ backgroundImage: `url(${imageUrl})` }} onClick={() => navigate(`/movies/${movie.id}`)}>
+            <div className="hero-overlay">
+                <div className="hero-content">
+                    <h1>{title}</h1>
+                    <p>{overview}</p>
+                    <button className="hero-btn">More Info</button>
+                </div>
             </div>
-          ))
-        ) : (
-          <p>No movies found.</p>
-        )}
-      </div>
-    </section>
-  );
+        </div>
+    );
+  };
 
   return (
-    <div className="movies-container">
-      <nav className="movies-nav">
-        <span onClick={() => navigate("/movies")}>Movies</span>
-        <span onClick={() => navigate("/books")}>Books</span>
-        <span onClick={() => navigate("/foryou")}>For You</span>
-        <span onClick={() => navigate("/chat")}>Chat</span>
-        <div className="profile-icon" onClick={() => navigate("/preferences")}>👤</div>
-      </nav>
+    <div className="movies-page-container">
+      <header className="movies-page-header">
+        <div className="search-container">
+            <input
+                type="text"
+                placeholder="Search for movies..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+        </div>
+      </header>
+      
+      {error && <div className="error-message">{error}</div>}
 
-      {renderMovieRow(`Coming Up (${preferredLanguage})`, upcomingMovies)}
-      {renderMovieRow(`Latest Releases (${preferredLanguage})`, latestMovies)}
-      {preferredGenre && renderMovieRow(`Genre: ${preferredGenre} (${preferredLanguage})`, genreMovies)}
-      {renderMovieRow("Trending in India", trendingMovies)}
+      {loading ? (
+          <div className="loading-movies">Curating your cinematic experience...</div>
+      ) : (
+        <main>
+          {!searchQuery && <HeroCard movie={heroMovie} />}
+          
+          {searchQuery ? (
+            <MovieRow title={`Results for "${searchQuery}"`} movies={searchResults} />
+          ) : (
+            <>
+              <MovieRow title={`Top Picks in ${genreName}`} movies={topPicks} />
+              <MovieRow title="Trending Now" movies={trending} />
+              <MovieRow title="Latest Releases" movies={latest} />
+              <MovieRow title="Upcoming Movies" movies={upcoming} />
+            </>
+          )}
+        </main>
+      )}
     </div>
   );
 };

@@ -46,9 +46,10 @@ const SignupPage = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Save user to Firestore if not exists
+      // Check if user already exists in Firestore
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
+        // Create new user in Firestore
         await setDoc(doc(db, "users", user.uid), {
           username: user.displayName || "Google User",
           email: user.email,
@@ -74,7 +75,6 @@ const SignupPage = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        {/* Username/Email/Password Form */}
         <form onSubmit={handleEmailSignup} className="auth-form">
           <div className="input-group">
             <input
@@ -86,7 +86,6 @@ const SignupPage = () => {
             />
             <label>Username</label>
           </div>
-
           <div className="input-group">
             <input
               type="email"
@@ -97,7 +96,6 @@ const SignupPage = () => {
             />
             <label>Email</label>
           </div>
-
           <div className="input-group">
             <input
               type="password"
@@ -114,7 +112,6 @@ const SignupPage = () => {
           </button>
         </form>
 
-        {/* Google Signup */}
         <div className="social-login">
           <p>Or sign up with</p>
           <button
