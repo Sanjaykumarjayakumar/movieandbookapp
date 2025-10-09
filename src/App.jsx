@@ -9,6 +9,7 @@ import PreferencePage from "./pages/PreferencePage";
 import MoviesPage from "./pages/MoviesPage";
 import MovieDetailPage from "./pages/MovieDetailPage";
 import BooksPage from "./pages/BooksPage";
+import BookDetailPage from "./pages/BookDetailPage";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Navbar from "./components/Navbar";
 import "./App.css";
@@ -23,7 +24,6 @@ const App = () => {
           <Navbar user={user} />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Navigate to="/movies" />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/finishSignUp" element={<FinishSignUpPage />} />
@@ -31,6 +31,7 @@ const App = () => {
               <Route path="/movies" element={<MoviesPage />} />
               <Route path="/movies/:id" element={<MovieDetailPage />} />
               <Route path="/books" element={<BooksPage />} />
+              <Route path="/books/:id" element={<BookDetailPage />} />
             </Routes>
           </main>
         </div>

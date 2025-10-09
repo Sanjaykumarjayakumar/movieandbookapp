@@ -65,15 +65,19 @@ const MoviesPage = () => {
 
   useEffect(() => {
     const fetchAllCategories = async () => {
-      if (!language) return;
+      if (!language || !genre) return;
       setLoading(true);
       setError(null);
+
+      const today = new Date();
+      const oneMonthAgo = new Date(new Date().setMonth(today.getMonth() - 1));
+      const formatDate = (date) => date.toISOString().split('T')[0];
 
       const urls = {
         topPicks: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&with_original_language=${language}&with_genres=${genre}`,
         trending: `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}&language=${language}`,
-        latest: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=${language}&region=${region}`,
-        upcoming: `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=${language}&region=${region}`,
+        latest: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=${language}&with_genres=${genre}&with_original_language=${language}&primary_release_date.gte=${formatDate(oneMonthAgo)}&primary_release_date.lte=${formatDate(today)}`,
+        upcoming: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=${language}&with_genres=${genre}&with_original_language=${language}&primary_release_date.gte=${formatDate(today)}`,
       };
 
       try {
@@ -83,9 +87,16 @@ const MoviesPage = () => {
           fetchMovies(urls.latest),
           fetchMovies(urls.upcoming),
         ]);
+        
+        const currentDate = new Date();
+        const releasedTopPicks = topPicksResults.filter(movie => {
+            if (!movie.release_date) return false;
+            const releaseDate = new Date(movie.release_date);
+            return releaseDate <= currentDate;
+        });
 
-        setHeroMovie(topPicksResults[0] || trendingResults[0]);
-        setTopPicks(topPicksResults);
+        setHeroMovie(releasedTopPicks[0] || trendingResults[0] || latestResults[0]);
+        setTopPicks(releasedTopPicks);
         setTrending(trendingResults);
         setLatest(latestResults);
         setUpcoming(upcomingResults);

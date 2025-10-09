@@ -1,57 +1,64 @@
 /* src/components/BookRow.css */
 .book-row-container {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .book-row-container h2 {
   color: #fff;
-  font-size: 1.6em;
+  font-size: 2em;
   font-weight: 600;
-  margin-bottom: 15px;
-  padding-left: 40px;
+  margin-bottom: 25px;
+  padding-left: 20px;
+  border-left: 5px solid #00aaff;
 }
 
-.book-row-scroll {
-  display: flex;
+.book-row-scroll-container {
   overflow-x: auto;
-  overflow-y: hidden;
-  padding: 10px 40px;
+  padding: 20px 0;
   scrollbar-width: none; /* Firefox */
 }
 
-.book-row-scroll::-webkit-scrollbar {
+.book-row-scroll-container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
+.book-row {
+  display: flex;
+  gap: 25px;
+  padding: 0 20px;
+}
+
 .book-row-card {
-  flex: 0 0 160px;
-  margin-right: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #2c2c2c;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s ease;
   cursor: pointer;
+  overflow: hidden;
+  width: 220px; 
+  flex-shrink: 0;
 }
 
 .book-row-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 170, 255, 0.2);
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 15px 30px rgba(0, 170, 255, 0.4);
 }
 
 .book-row-card img {
   width: 100%;
-  height: 240px;
+  height: 300px;
   object-fit: cover;
+  border-bottom: 4px solid #00aaff;
 }
 
 .book-row-card-info {
-  padding: 15px 10px;
+  padding: 20px;
 }
 
 .book-row-card-info h3 {
   color: #fff;
-  font-size: 0.9em;
-  font-weight: 500;
+  font-size: 1.1em;
+  font-weight: 600;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
