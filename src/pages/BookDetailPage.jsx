@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./BookDetailPage.css";
+import BOOK_API_KEY from "../bookApiKey";
 
-const API_KEY = import.meta.env.VITE_BOOKS_API_KEY;
+const API_KEY = BOOK_API_KEY;
 const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
 
 const BookDetailPage = () => {
@@ -43,10 +44,11 @@ const BookDetailPage = () => {
   const title = volumeInfo.title || "No Title";
   const authors = volumeInfo.authors?.join(", ") || "Unknown Author";
   const description = volumeInfo.description || "No description available.";
-  const coverImage =
+  const coverImage = (
     volumeInfo.imageLinks?.thumbnail ||
     volumeInfo.imageLinks?.smallThumbnail ||
-    "https://via.placeholder.com/200x300";
+    "https://placehold.co/200x300"
+  ).replace(/^http:/, 'https:');
   const googleBooksLink = volumeInfo.previewLink || volumeInfo.infoLink;
 
   return (

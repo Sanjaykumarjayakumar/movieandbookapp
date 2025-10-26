@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BookRow from "../components/BookRow";
 import "./MovieDetail.css";
+import MOVIE_API_KEY from "../movieApiKey";
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -9,12 +10,11 @@ const MovieDetailPage = () => {
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
-  const [booksByTitle, setBooksByTitle] = useState([]);
   const [booksByGenre, setBooksByGenre] = useState([]);
   const [booksByDescription, setBooksByDescription] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const apiKey = "fcd51437a7ba421ef6d37e8a2a25c893";
+  const apiKey = MOVIE_API_KEY;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -49,12 +49,6 @@ const MovieDetailPage = () => {
 
     const fetchBooks = async () => {
       try {
-        // --- 1️⃣ By Title ---
-        const titleQuery = movie.title || movie.original_title;
-        const titleRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(titleQuery)}&maxResults=10`);
-        const titleData = await titleRes.json();
-        setBooksByTitle(titleData.items || []);
-
         // --- 2️⃣ By Genre ---
         const genreNames = movie.genres?.map((g) => g.name).join(" ") || "fiction";
         const genreRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(genreNames)}&maxResults=10`);
@@ -126,7 +120,7 @@ const MovieDetailPage = () => {
                   src={
                     actor.profile_path
                       ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                      : "https://via.placeholder.com/200x300?text=No+Image"
+                      : "https://placehold.co/200x300?text=No+Image"
                   }
                   alt={actor.name}
                 />
@@ -159,7 +153,6 @@ const MovieDetailPage = () => {
 
         {/* 📚 Recommended Books */}
         <div className="detail-section">
-          <BookRow title="Books Matching Title" books={booksByTitle} />
           <BookRow title="Books Matching Genre" books={booksByGenre} />
           <BookRow title="Books Matching Description" books={booksByDescription} />
         </div>

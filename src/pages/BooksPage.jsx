@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import BookRow from "../components/BookRow";
 import "./BooksPage.css";
+import BOOK_API_KEY from "../bookApiKey";
 
 // ✅ Load API key from .env
-const API_KEY = import.meta.env.VITE_BOOKS_API_KEY;
+const API_KEY = BOOK_API_KEY;
 const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
 
 const BooksPage = () => {

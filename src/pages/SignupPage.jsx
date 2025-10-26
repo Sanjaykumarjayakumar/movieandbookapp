@@ -1,92 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, googleProvider, db } from "../firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
 import "./Auth.css";
 
 const SignupPage = () => {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  const { user, signup, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Email/password signup
-  const handleEmailSignup = async (e) => {
+  useEffect(() => {
+    if (user) navigate("/movies"); // redirect if logged in
+  }, [user, navigate]);
+
+  const handleSignup = (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Save additional info to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        username,
-        email,
-        createdAt: new Date(),
-      });
-
-      navigate("/movies");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (!signup(name, email, password)) {
+      setError("Failed to create an account");
     }
   };
 
-  // Google signup/login
-  const handleGoogleSignup = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-
-      // Save user to Firestore if not exists
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (!userDoc.exists()) {
-        await setDoc(doc(db, "users", user.uid), {
-          username: user.displayName || "Google User",
-          email: user.email,
-          createdAt: new Date(),
-        });
-      }
-
-      navigate("/movies");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="auth-container">
       <div className="auth-content">
         <div className="auth-header">
           <h1>Create Account</h1>
-          <p>Join our community of movie lovers.</p>
+          <p>Start your cinematic journey today.</p>
         </div>
 
         {error && <p className="error-message">{error}</p>}
 
-        {/* Username/Email/Password Form */}
-        <form onSubmit={handleEmailSignup} className="auth-form">
-          <div className="input-group">
+        <form onSubmit={handleSignup} className="auth-form">
+         <div className="input-group">
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               placeholder=" "
             />
-            <label>Username</label>
+            <label>Full Name</label>
           </div>
-
           <div className="input-group">
             <input
               type="email"
@@ -97,7 +56,6 @@ const SignupPage = () => {
             />
             <label>Email</label>
           </div>
-
           <div className="input-group">
             <input
               type="password"
@@ -110,21 +68,9 @@ const SignupPage = () => {
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "Creating account..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
-
-        {/* Google Signup */}
-        <div className="social-login">
-          <p>Or sign up with</p>
-          <button
-            onClick={handleGoogleSignup}
-            className="auth-btn google-btn"
-            disabled={loading}
-          >
-            {loading ? "Please wait..." : "Continue with Google"}
-          </button>
-        </div>
 
         <div className="form-footer">
           <p>

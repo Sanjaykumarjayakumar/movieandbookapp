@@ -1,59 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, googleProvider, db } from "../firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
 import "./Auth.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { user, login, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleEmailLogin = async (e) => {
+  useEffect(() => {
+    if (user) navigate("/movies"); // redirect if logged in
+  }, [user, navigate]);
+
+  const handleLogin = (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/movies");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (!login(email, password)) {
+      setError("Invalid email or password");
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-
-      // Ensure user exists in Firestore
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (!userDoc.exists()) {
-        await setDoc(doc(db, "users", user.uid), {
-          username: user.displayName || "Google User",
-          email: user.email,
-          createdAt: new Date(),
-        });
-      }
-
-      navigate("/movies");
-    } catch (err) {
-      if (err.code === "auth/popup-closed-by-user") {
-        setError("You closed the login popup before completing login.");
-      } else {
-        setError(err.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="auth-container">
@@ -65,7 +34,7 @@ const LoginPage = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={handleEmailLogin} className="auth-form">
+        <form onSubmit={handleLogin} className="auth-form">
           <div className="input-group">
             <input
               type="email"
@@ -91,17 +60,6 @@ const LoginPage = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <div className="social-login">
-          <p>Or login with</p>
-          <button
-            onClick={handleGoogleLogin}
-            className="auth-btn google-btn"
-            disabled={loading}
-          >
-            {loading ? "Please wait..." : "Continue with Google"}
-          </button>
-        </div>
 
         <div className="form-footer">
           <p>
