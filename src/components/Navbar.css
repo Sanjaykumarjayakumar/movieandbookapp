@@ -1,35 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background-color: #141414;
+    padding: 1.5rem 3rem;
+    background: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
     text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: #00aaff;
 }
 
 .navbar-right {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: center;
 }
 
 .navbar-item {
-    color: white;
+    color: #fff;
     text-decoration: none;
     font-size: 1rem;
-    transition: color 0.3s;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
 }
 
 .navbar-item:hover {
-    color: #e50914;
+    color: #00aaff;
+}
+
+.navbar-item::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #00aaff;
+    transition: width 0.3s ease;
+}
+
+.navbar-item:hover::after {
+    width: 100%;
 }
 
 .navbar-item button {
@@ -43,4 +79,109 @@
 
 .navbar-item button:hover {
     color: #e50914;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00aaff, #0088cc);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.uploading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.profile-photo:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+    border-color: #00aaff;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    min-width: 160px;
+    padding: 8px;
+    z-index: 1000;
+    animation: slideDown 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 170, 255, 0.15);
+    color: #00aaff;
+    transform: translateX(3px);
 }

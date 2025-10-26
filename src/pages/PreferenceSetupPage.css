@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+.preference-setup-container {
+  min-height: calc(100vh - 80px);
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.preference-setup-content {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00aaff, #00ffaa);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.step-indicator {
+  color: #00aaff;
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.preference-step h2 {
+  color: #fff;
+  font-size: 2.2em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.preference-step p {
+  color: #ccc;
+  font-size: 1.1em;
+  margin-bottom: 40px;
+}
+
+.preference-group {
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.preference-group h3 {
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.preference-dropdown {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.preference-dropdown:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.preference-dropdown option {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 10px;
+}
+
+.preference-date-input {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.preference-date-input:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.preference-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.preference-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.preference-btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  min-width: 120px;
+}
+
+.preference-btn.primary {
+  background: linear-gradient(135deg, #00aaff, #0088cc);
+  color: white;
+}
+
+.preference-btn.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 170, 255, 0.4);
+}
+
+.preference-btn.secondary {
+  background: transparent;
+  color: #00aaff;
+  border: 2px solid #00aaff;
+}
+
+.preference-btn.secondary:hover {
+  background: rgba(0, 170, 255, 0.1);
+}
+
+.preference-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+@media (max-width: 768px) {
+  .preference-setup-container {
+    padding: 20px;
+  }
+  
+  .preference-setup-content {
+    padding: 30px 20px;
+  }
+  
+  .preference-step h2 {
+    font-size: 1.8em;
+  }
+  
+  .preference-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .preference-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}

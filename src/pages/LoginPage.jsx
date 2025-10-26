@@ -4,21 +4,34 @@ import { useAuth } from "../contexts/AuthContext";
 import "./Auth.css";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, login, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/movies"); // redirect if logged in
+    if (user) {
+      // Check if user is first time user
+      if (user.isFirstTime) {
+        navigate("/preference-setup");
+      } else {
+        navigate("/movies");
+      }
+    }
   }, [user, navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
     setError("");
-    if (!login(email, password)) {
-      setError("Invalid email or password");
+    if (!username || !password) {
+      setError("Please enter both username and password");
+      return;
+    }
+    
+    const result = login(username, password);
+    if (!result.success) {
+      setError(result.message);
     }
   };
 
@@ -37,13 +50,13 @@ const LoginPage = () => {
         <form onSubmit={handleLogin} className="auth-form">
           <div className="input-group">
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               placeholder=" "
             />
-            <label>Email</label>
+            <label>Username</label>
           </div>
           <div className="input-group">
             <input

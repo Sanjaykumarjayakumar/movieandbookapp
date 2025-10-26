@@ -4,22 +4,30 @@ import { useAuth } from "../contexts/AuthContext";
 import "./Auth.css";
 
 const SignupPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, signup, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/movies"); // redirect if logged in
+    if (user) {
+      // New users will always go to preference setup
+      navigate("/preference-setup");
+    }
   }, [user, navigate]);
 
   const handleSignup = (e) => {
     e.preventDefault();
     setError("");
-    if (!signup(name, email, password)) {
-      setError("Failed to create an account");
+    if (!username || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+    
+    const result = signup(username, password);
+    if (!result.success) {
+      setError(result.message);
     }
   };
 
@@ -36,25 +44,15 @@ const SignupPage = () => {
         {error && <p className="error-message">{error}</p>}
 
         <form onSubmit={handleSignup} className="auth-form">
-         <div className="input-group">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder=" "
-            />
-            <label>Full Name</label>
-          </div>
           <div className="input-group">
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               placeholder=" "
             />
-            <label>Email</label>
+            <label>Username</label>
           </div>
           <div className="input-group">
             <input

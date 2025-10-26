@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import BookRow from "../components/BookRow";
 import "./BooksPage.css";
 import BOOK_API_KEY from "../bookApiKey";
@@ -8,6 +10,8 @@ const API_KEY = BOOK_API_KEY;
 const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
 
 const BooksPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [trendingBooks, setTrendingBooks] = useState([]);
@@ -16,32 +20,27 @@ const BooksPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ✅ State for preferences, initialized from localStorage
-  const [bookLanguage, setBookLanguage] = useState(
-    localStorage.getItem("bookLanguage") || "en"
-  );
-  const [bookGenre, setBookGenre] = useState(
-    localStorage.getItem("bookGenre") || "Fiction"
-  );
-
-  // ✅ Effect to listen for localStorage changes for real-time updates
+  // Redirect to login if not authenticated
   useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event.key === "bookLanguage" && event.newValue) {
-        setBookLanguage(event.newValue);
-      }
-      if (event.key === "bookGenre" && event.newValue) {
-        setBookGenre(event.newValue);
-      }
-    };
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
-    window.addEventListener("storage", handleStorageChange);
+  // ✅ State for preferences, initialized from user data or localStorage
+  const [bookLanguage, setBookLanguage] = useState("en");
+  const [bookGenre, setBookGenre] = useState("Fiction");
 
-    // Cleanup listener on component unmount
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  // Load preferences from user data
+  useEffect(() => {
+    if (user && user.preferences) {
+      setBookLanguage(user.preferences.bookLanguage || "en");
+      setBookGenre(user.preferences.bookGenre || "Fiction");
+    } else {
+      setBookLanguage(localStorage.getItem("bookLanguage") || "en");
+      setBookGenre(localStorage.getItem("bookGenre") || "Fiction");
+    }
+  }, [user]);
 
   // ✅ Generic fetch books helper, depends only on language
   const fetchBooks = useCallback(

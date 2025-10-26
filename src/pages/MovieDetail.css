@@ -10,6 +10,36 @@
   color: #ccc;
 }
 
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  padding: 40px;
+}
+
+.error-content {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 600px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-content h2 {
+  font-size: 2em;
+  color: #ff6b6b;
+  margin-bottom: 15px;
+}
+
+.error-content p {
+  font-size: 1.1em;
+  color: #ccc;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
 .movie-detail-container {
   position: relative;
   color: #fff;
@@ -89,13 +119,74 @@
 
 .movie-rating {
   font-size: 1.2em;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .rating-value {
   font-weight: 700;
   font-size: 1.5em;
   color: #00aaff;
+}
+
+.movie-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.watchlist-btn {
+  background: linear-gradient(135deg, #00aaff, #0088cc);
+  border: none;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3);
+  text-decoration: none;
+}
+
+.watchlist-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+}
+
+.watchlist-btn.in-watchlist {
+  background: linear-gradient(135deg, #00ff88, #00cc66);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.watchlist-btn.in-watchlist:hover {
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+}
+
+.trailer-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  border: none;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  text-decoration: none;
+}
+
+.trailer-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+}
+
+.trailer-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
 }
 
 .movie-header-details h3 {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import "./BookDetailPage.css";
 import BOOK_API_KEY from "../bookApiKey";
 
@@ -9,9 +10,11 @@ const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
 const BookDetailPage = () => {
   const { id } = useParams(); // book id passed in route
   const navigate = useNavigate();
+  const { user, addToReadLater, removeFromReadLater, getReadLater } = useAuth();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isInReadLater, setIsInReadLater] = useState(false);
 
   useEffect(() => {
     const fetchBookDetail = async () => {
@@ -35,6 +38,41 @@ const BookDetailPage = () => {
 
     fetchBookDetail();
   }, [id]);
+
+  // Check if book is in read later on mount and when book changes
+  useEffect(() => {
+    if (book && user) {
+      const readLater = getReadLater();
+      setIsInReadLater(readLater.some(item => item.id === book.id));
+    }
+  }, [book, user, getReadLater]);
+
+  // Handle adding/removing from read later
+  const handleReadLaterToggle = () => {
+    if (!book || !user) return;
+    
+    const { volumeInfo } = book;
+    
+    if (isInReadLater) {
+      // Remove from read later
+      const result = removeFromReadLater(book.id);
+      if (result.success) {
+        setIsInReadLater(false);
+      }
+    } else {
+      // Add to read later
+      const bookData = {
+        id: book.id,
+        title: volumeInfo.title,
+        authors: volumeInfo.authors,
+        imageLinks: volumeInfo.imageLinks
+      };
+      const result = addToReadLater(bookData);
+      if (result.success) {
+        setIsInReadLater(true);
+      }
+    }
+  };
 
   if (loading) return <p className="loading-text">Loading book details...</p>;
   if (error) return <p className="error-text">{error}</p>;
@@ -65,6 +103,12 @@ const BookDetailPage = () => {
         <div className="book-detail-info">
           <h1>{title}</h1>
           <h3>By: {authors}</h3>
+          <button 
+            onClick={handleReadLaterToggle}
+            className={`read-later-btn ${isInReadLater ? 'in-readlater' : ''}`}
+          >
+            {isInReadLater ? '✓ In Read Later' : '+ Add to Read Later'}
+          </button>
           <p dangerouslySetInnerHTML={{ __html: description }}></p>
           {googleBooksLink && (
             <a

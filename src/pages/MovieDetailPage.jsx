@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import BookRow from "../components/BookRow";
 import "./MovieDetail.css";
 import MOVIE_API_KEY from "../movieApiKey";
@@ -7,26 +8,48 @@ import MOVIE_API_KEY from "../movieApiKey";
 const MovieDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, addToWatchlist, removeFromWatchlist, getWatchlist } = useAuth();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
   const [booksByGenre, setBooksByGenre] = useState([]);
   const [booksByDescription, setBooksByDescription] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [error, setError] = useState(null);
+  const [trailerKey, setTrailerKey] = useState(null);
 
   const apiKey = MOVIE_API_KEY;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const [movieRes, creditsRes] = await Promise.all([
+        const [movieRes, creditsRes, videosRes] = await Promise.all([
           fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US&append_to_response=watch/providers`),
-          fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`)
+          fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`),
+          fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`)
         ]);
+
+        if (!movieRes.ok) {
+          console.error("Failed to fetch movie:", movieRes.status, movieRes.statusText);
+          setError(`Failed to fetch movie: ${movieRes.statusText}`);
+          setLoading(false);
+          return;
+        }
 
         const movieData = await movieRes.json();
         const creditsData = await creditsRes.json();
+        const videosData = await videosRes.json();
+
+        // Check if the response has an error or if the movie data is invalid
+        if (movieData.status_code === 34 || movieData.status_code === 1 || !movieData.id) {
+          console.error("Invalid movie data:", movieData);
+          setError(movieData.status_message || "Movie not found");
+          setLoading(false);
+          return;
+        }
 
         setMovie(movieData);
         setCast(creditsData.cast.slice(0, 10));
@@ -34,14 +57,24 @@ const MovieDetailPage = () => {
         if (movieData["watch/providers"]?.results?.IN?.flatrate) {
           setWatchProviders(movieData["watch/providers"].results.IN.flatrate);
         }
+
+        // Find trailer video
+        const trailer = videosData.results?.find(video => 
+          video.type === 'Trailer' && video.site === 'YouTube'
+        );
+        console.log('trailer:', trailer);
+        if (trailer) {
+          setTrailerKey(trailer.key);
+        }
       } catch (err) {
         console.error("Failed to fetch movie details:", err);
+        setError("Network error. Please check your connection and try again.");
       } finally {
         setLoading(false);
       }
     };
     fetchMovieDetails();
-  }, [id]);
+  }, [id, apiKey]);
 
   // 🔍 Fetch books based on different criteria
   useEffect(() => {
@@ -68,11 +101,66 @@ const MovieDetailPage = () => {
     fetchBooks();
   }, [movie]);
 
-  if (loading) return <div className="loading-container">Finding your movie...</div>;
-  if (!movie) return <div className="loading-container">Could not find this movie.</div>;
+  // Check if movie is in watchlist on mount and when movie changes
+  useEffect(() => {
+    if (movie && user) {
+      const watchlist = getWatchlist();
+      setIsInWatchlist(watchlist.some(item => item.id === movie.id));
+    }
+  }, [movie, user, getWatchlist]);
 
-  const backgroundStyle = {
+  // Handle adding/removing from watchlist
+  const handleWatchlistToggle = () => {
+    if (!movie || !user) return;
+    
+    if (isInWatchlist) {
+      // Remove from watchlist
+      const result = removeFromWatchlist(movie.id);
+      if (result.success) {
+        setIsInWatchlist(false);
+      }
+    } else {
+      // Add to watchlist
+      const movieData = {
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+        release_date: movie.release_date,
+        vote_average: movie.vote_average
+      };
+      const result = addToWatchlist(movieData);
+      if (result.success) {
+        setIsInWatchlist(true);
+      }
+    }
+  };
+
+  // Handle watch trailer
+  const handleWatchTrailer = () => {
+    if (trailerKey) {
+      window.open(`https://www.youtube.com/watch?v=${trailerKey}`, '_blank');
+    }
+  };
+
+  if (loading) return <div className="loading-container">Finding your movie...</div>;
+  if (error || !movie) {
+    return (
+      <div className="error-container">
+        <div className="error-content">
+          <h2>Could not find this movie</h2>
+          <p>{error || "The movie you're looking for doesn't exist or couldn't be loaded."}</p>
+          <button className="back-btn" onClick={() => navigate('/movies')}>
+            &larr; Back to Movies
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const backgroundStyle = movie.backdrop_path ? {
     backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+  } : {
+    background: '#111',
   };
 
   return (
@@ -104,6 +192,21 @@ const MovieDetailPage = () => {
             </div>
             <div className="movie-rating">
               <span className="rating-value">⭐ {movie.vote_average?.toFixed(1)}</span> / 10
+            </div>
+            <div className="movie-actions">
+              <button 
+                onClick={handleWatchlistToggle}
+                className={`watchlist-btn ${isInWatchlist ? 'in-watchlist' : ''}`}
+              >
+                {isInWatchlist ? '✓ Added to Watchlist' : '+ Add to Watchlist'}
+              </button>
+              <button 
+                onClick={handleWatchTrailer}
+                className="trailer-btn"
+                disabled={!trailerKey}
+              >
+                ▶ Watch Trailer
+              </button>
             </div>
             <h3>Overview</h3>
             <p className="movie-overview">{movie.overview}</p>
@@ -162,3 +265,4 @@ const MovieDetailPage = () => {
 };
 
 export default MovieDetailPage;
+age;

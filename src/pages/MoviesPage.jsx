@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
 import MovieRow from "../components/MovieRow";
 import { useLanguage } from "../hooks/useLanguage";
 import "./Movies.css";
@@ -16,17 +15,26 @@ const MoviesPage = () => {
   const [heroMovie, setHeroMovie] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   const [topPicks, setTopPicks] = useState([]);
   const [latest, setLatest] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [latestIndia, setLatestIndia] = useState([]);
   const [upcomingIndia, setUpcomingIndia] = useState([]);
+  const [heroCast, setHeroCast] = useState([]);
+  const [heroCrew, setHeroCrew] = useState([]);
 
-  const user = auth.currentUser;
   const apiKey = MOVIE_API_KEY;
   const genreName = localStorage.getItem("genreName") || "";
   const region = "IN";
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   const fetchMovies = useCallback(async (url) => {
     try {
@@ -42,21 +50,12 @@ const MoviesPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchGenrePreference = async () => {
+    const fetchGenrePreference = () => {
       let userGenre = "";
-      if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists() && userDoc.data().preferences) {
-            userGenre = userDoc.data().preferences.genre || "";
-          }
-        } catch (err) {
-          console.error("Error fetching user preferences:", err);
-          setError("Could not load your genre preference.");
-        }
+      if (user && user.preferences) {
+        userGenre = user.preferences.movieGenre || "";
       } else {
-        userGenre = localStorage.getItem("preferredGenre") || "";
+        userGenre = localStorage.getItem("movieGenre") || "";
       }
       setGenre(userGenre);
     };
@@ -104,12 +103,26 @@ const MoviesPage = () => {
           return releaseDate <= currentDate;
         });
 
-        setHeroMovie(
-          releasedTopPicks[0] ||
-            latestResults[0] ||
-            latestIndiaResults[0] ||
-            upcomingIndiaResults[0]
-        );
+        const selectedHero = releasedTopPicks[0] ||
+          latestResults[0] ||
+          latestIndiaResults[0] ||
+          upcomingIndiaResults[0];
+        
+        setHeroMovie(selectedHero);
+        
+        // Fetch cast and crew for hero movie
+        if (selectedHero && selectedHero.id) {
+          fetch(`https://api.themoviedb.org/3/movie/${selectedHero.id}/credits?api_key=${apiKey}`)
+            .then(res => res.json())
+            .then(data => {
+              setHeroCast(data.cast?.slice(0, 8) || []);
+              setHeroCrew(data.crew?.filter(person => 
+                person.job === 'Director' || person.job === 'Producer' || person.job === 'Writer'
+              ).slice(0, 6) || []);
+            })
+            .catch(err => console.error("Error fetching cast/crew:", err));
+        }
+        
         setTopPicks(releasedTopPicks);
         setLatest(latestResults);
         setUpcoming(upcomingResults);

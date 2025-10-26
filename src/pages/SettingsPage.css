@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+.settings-container {
+  min-height: calc(100vh - 80px);
+  background: #000;
+  padding: 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #00aaff;
+  border-color: #00aaff;
+}
+
+.settings-header h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.settings-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-section h2 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #00aaff;
+  margin-bottom: 25px;
+  border-left: 5px solid #00aaff;
+  padding-left: 15px;
+}
+
+/* User Info Card */
+.user-info-card {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00aaff, #0088cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  font-weight: 600;
+  color: white;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-label {
+  font-size: 0.9em;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.user-value {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Items Grid */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+}
+
+.item-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-3px);
+}
+
+.item-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.item-card img:hover {
+  opacity: 0.8;
+}
+
+.item-info {
+  padding: 15px;
+}
+
+.item-info h4 {
+  font-size: 1em;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.item-info h4:hover {
+  color: #00aaff;
+}
+
+.item-info p {
+  font-size: 0.9em;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.remove-btn {
+  background: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.5);
+  color: #ff6b6b;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  font-size: 1.1em;
+  padding: 40px;
+}
+
+/* Preference Styles */
+.selection-group {
+  margin-bottom: 40px;
+}
+
+.group-title {
+  font-size: 1.8em;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.genre-grid {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.option-btn {
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00aaff;
+}
+
+.option-btn.selected {
+  background: #00aaff;
+  border-color: #00aaff;
+  color: #111;
+  font-weight: 700;
+  box-shadow: 0 0 15px #00aaff;
+}
+
+.save-btn {
+  padding: 18px 40px;
+  font-size: 1.3em;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #00aaff, #00ffaa);
+  color: #fff;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.save-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00aaff;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown-select {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.dropdown-select option {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 10px;
+}
+
+.date-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 1em;
+  width: 200px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.2);
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.save-all-btn {
+  background: linear-gradient(135deg, #00aaff, #0088cc);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
+.save-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 170, 255, 0.4);
+}
+

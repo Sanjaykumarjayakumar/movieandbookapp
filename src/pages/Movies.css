@@ -2,13 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .movies-page-container {
-    background-color: #111;
+    background-color: #000;
     min-height: calc(100vh - 80px);
+    font-family: 'Poppins', sans-serif;
 }
 
 .movies-page-header {
-    padding: 20px 40px;
-    background: rgba(0,0,0,0.3);
+    padding: 30px 40px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .search-container {
@@ -25,30 +27,38 @@
     color: #fff;
     font-size: 1.1em;
     transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-container input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .search-container input:focus {
     outline: none;
     border-color: #00aaff;
-    box-shadow: 0 0 15px #00aaff;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.4);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .loading-movies {
     text-align: center;
-    padding: 50px;
+    padding: 80px 50px;
     font-size: 1.5em;
-    color: #ccc;
+    color: #00aaff;
+    font-weight: 600;
 }
 
 .error-message {
     text-align: center;
     padding: 20px 40px;
-    background-color: #ff3333;
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
     color: #fff;
     border-radius: 10px;
     margin: 20px 40px;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
 .hero-card {
@@ -85,7 +95,25 @@
     font-size: 1.2em;
     max-width: 60%;
     line-height: 1.6;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.hero-cast-crew {
+    max-width: 60%;
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.hero-cast-crew strong {
+    color: #00aaff;
+    font-weight: 600;
+}
+
+.hero-cast,
+.hero-crew {
+    margin-bottom: 8px;
 }
 
 .hero-btn {
@@ -106,17 +134,18 @@
 }
 
 .movie-row {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
     padding: 0 40px;
 }
 
 .movie-row h2 {
-    font-size: 2em;
-    font-weight: 600;
+    font-size: 2.2em;
+    font-weight: 700;
     color: #fff;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border-left: 5px solid #00aaff;
-    padding-left: 15px;
+    padding-left: 20px;
+    text-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
 }
 
 .movie-row-content {
@@ -145,17 +174,19 @@
 
 .movie-card {
     flex: 0 0 220px; /* fixed width for horizontal scrolling */
-    background-color: #222;
-    border-radius: 10px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .movie-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 25px rgba(0,0,0,0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .movie-card img {
